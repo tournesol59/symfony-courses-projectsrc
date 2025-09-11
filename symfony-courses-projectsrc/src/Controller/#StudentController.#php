@@ -1,0 +1,77 @@
+<?php
+// FRED, maybe it will be NECESSARY to downcast the route definition to Symfony 6 old plain comments @..
+namespace App\Controller;
+
+use App\Entity\Abonne;
+use App\Entity\Student;
+use App\Form\StudentType;
+use App\Repository\StudentRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
+
+final class StudentController extends AbstractController
+{
+    private EntityManagerInterface $em;
+
+    private StudentRepository $repository;
+
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->em = $entityManager;
+		$this->repository = $this->em->getRepository(Student::class);
+    }
+	
+//    #[Route('/student', name: 'student.index', methods: ['GET', 'HEAD'])]
+    public function index(Request $request): Response {
+			$students = $this->repository->findAll();
+			return $this->render('student/index.html.twig', [
+              'students' => $students]);
+	}	
+	
+//	#[Route('/student/show/{id}', name: 'student.show', methods: ['GET', 'HEAD'])]
+	public function show(Request $request): Response {
+		$student = $this->repository->findById($id);
+		return $this->render('student/show.html.twig', [
+		  'student' => $student]);
+	}
+
+//    #[Route('/student/create', name: 'student.create', methods: ['GET', 'POST'])]
+    //public create(Request $request, AbonneRepository $abonneRepository): Response {
+    public function create(Request $request): Response {		
+        $abonne = new Abonne();
+		$abonne->setName('science');
+	    $student = new Student();
+		$student->setAbonne($abonne);
+		$abonne->addStudent($student);
+		
+		$studForm = $this->createForm(StudentType::class, $student); // on fait confiance a Symfony pour injecter l object Abonne
+		$studForm->handleRequest($request);
+		if (!($studForm->isSubmitted()) && !($studForm->isValidated()) ) {
+	            $this->em->persist($student);
+		    $this->em->flush();
+		    $this->redirectToRoute('student.index');
+		}
+		else {
+		    $this->render('student/create.html.twig',
+			   ['form' => $studForm->createView(),
+			   ]);
+		}
+    }	
+
+//    #[Route('/{id}/delete', name: 'admin.student.delete', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
+    public function remove(Student $student)
+    {
+       $this->em->remove($student);
+       $this->em->flush();
+       $this->addFlash('success', 'Votre compte a bien ete supprime');
+       return $this->redirectToRoute('admin.student.index');
+    }
+	
+}	
+?>

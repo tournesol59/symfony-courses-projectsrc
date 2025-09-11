@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block title "Cours enregistres" %}
+
+{% block body %}
+
+<p> Paragraphe </p>
+<table>
+  {% for course in courses %}
+  <tr>
+     <td>
+        <a href="{{ path('course.show', {id: course.id}) }}"> {{ course.title }} </a>
+     </td>
+     <td>
+        <div class="d-flex gap-1">
+          <a class="btn btn-primary btn-sn" href="{{ path('course.show', {id: course.id}) }}"></a>
+        </div>
+     </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %} 

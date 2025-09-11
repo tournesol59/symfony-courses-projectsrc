@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\AddressRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: AddressRepository::class)]
+class Address
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $city = null;
+
+    #[ORM\Column]
+    private ?int $zipcode = null;
+
+    /**
+     * @var Collection<int, Student>
+     */
+    #[ORM\ManyToMany(targetEntity: Student::class, mappedBy: 'address')]
+    private Collection $students;
+
+    public function __construct(?string $city)
+    {
+	$this->city = $city;
+        $this->students = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getZipcode(): ?int
+    {
+        return $this->zipcode;
+    }
+
+    public function setZipcode(int $zipcode): static
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Student>
+     */
+    public function getStudents(): Collection
+    {
+        return $this->students;
+    }
+
+    public function addStudent(Student $student): static
+    {
+        if (!$this->students->contains($student)) {
+            $this->students->add($student);
+            $student->addAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): static
+    {
+        if ($this->students->removeElement($student)) {
+            $student->removeAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString() {
+        return $this->getCity()." ".$this->getZipCode();
+    }
+}

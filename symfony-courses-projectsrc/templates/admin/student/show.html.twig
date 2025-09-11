@@ -1,0 +1,24 @@
+{% extends "admin.html.twig" %}
+
+{% block title "Etudiants Inscrits" %}
+
+{% block body %}
+
+<p> Paragraphe </p>
+<table>
+ <tr>
+   <td>Nom</td>
+   <td>{{ student.lastname }} </td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td>{{ student.email }} </td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>{{ student.status }}</td>
+  </tr>php   
+</table>
+{% endblock %} 
+
+

@@ -1,0 +1,24 @@
+{% extends "admin.html.twig" %}
+
+{% block title "Etudiants Inscrits" %}
+
+{% block body %}
+
+<p> Paragraphe </p>
+<table>
+  {% for student in students %}
+  <tr>
+     <td>
+        <a href="{{ path('admin.student.show', {id: student.id}) }}"> {{ student.lastname }} </a>
+     </td>
+     <td>
+        <div class="d-flex gap-1">
+          <a class="btn btn-primary btn-sn" href="{{ path('admin.student.edit', {id: student.id}) }}">Editer</a>
+        </div>
+     </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %} 
+
+

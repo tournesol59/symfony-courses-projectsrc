@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title "Etudiants Inscrits" %}
+
+{% block body %}
+
+<p> Paragraphe </p>
+<table>
+ <tr>
+   <td>Nom</td>
+   <td>{{ student.lastname }} </td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td>{{ student.email }} </td>
+  </tr>
+  <tr>
+    <td>Status</td>
+    <td>{{ status.name }}</td>
+  </tr> 
+  {% for addresse in student.address %}
+  <tr>
+    <td>Address</td>
+    <td>{{ addresse.city }}</td>
+  </tr>
+  {% end for %}
+</table>
+{% endblock %} 
+
+
