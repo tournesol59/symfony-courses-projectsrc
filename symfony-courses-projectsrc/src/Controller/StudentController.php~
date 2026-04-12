@@ -27,7 +27,7 @@ final class StudentController extends AbstractController
     private StudentRepository $studentRepository;
 
     private CourseBlockCheckerCollection $courseChecker;
-
+// there is one direct Dependency (studentRepository) and another one (cbRepository) wh is indirect
     public function __construct( StudentRepository $studentRepository, CourseBlockRepository $cbRepository) {
        $this->studentRepository = $studentRepository;
        $this->courseChecker = new CourseBlockCheckerCollection('CYC9101', $cbRepository);
@@ -41,6 +41,16 @@ final class StudentController extends AbstractController
         return $this->render('student/indexall.html.twig', [
             'students' => $students,
         ]);
+    }
+
+    #[Route('/student/status/{statusname}', name: 'student.indexstatus', methods: ['GET', 'HEAD'])]
+    public function indexstatus(string $statusname): Response
+    {
+	$students = $this->studentRepository->findByStatusName($statusname);
+// we keep the same view because it contains hyperlinks on particular entries
+	return $this->render('student/indexall.html.twig', [
+		'students' => $students,
+	]);
     }
 
     #[Route('/student/{id}', name: 'student.show', methods: ['GET','HEAD'])]

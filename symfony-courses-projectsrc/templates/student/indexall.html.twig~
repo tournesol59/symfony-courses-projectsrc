@@ -13,7 +13,7 @@
      </td>
      <td>
         <div class="d-flex gap-1">
-          <!-- a class="btn btn-primary btn-sn" href="{{ path('admin.student.edit', {id: student.id}) }}" -->Editer<!-- /a -->
+          <a class="btn btn-primary btn-sn" href="{{ path('student.show', {id: student.id}) }}"></a>
         </div>
      </td>
   </tr>

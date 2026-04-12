@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Student;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join as Join;
 
 /**
  * @extends ServiceEntityRepository<Student>
@@ -60,4 +61,26 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByStatusName($statusName): ?array
+    {
+	return $this->createQueryBuilder('s')
+	     ->leftJoin('student.status', 'status.id')
+	     ->andWhere('status.name LIKE :searchStatus')
+	     ->setParameter('searchStatus', '%'.$statusName.'%')
+	     ->addOrderBy('student.lastname', 'ASC')
+             ->getQuery()
+             ->getResult();
+    }
+
+    public function findByStatusId($statusid): ?array
+    {
+	    return $this->createQueryBuilder('student')
+	      ->leftJoin('student.status', 'status', Join::WITH, 'status.id=:searchStatus')
+	     //->leftJoin('student.status', 'status.id')
+	     //->andWhere('status.id LIKE :searchStatus')
+	     ->setParameter('searchStatus', '%'.$statusid.'%')
+	     ->addOrderBy('student.lastname', 'ASC')
+             ->getQuery()
+             ->getResult();
+    }
 }

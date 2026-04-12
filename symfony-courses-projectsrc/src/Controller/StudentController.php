@@ -43,6 +43,16 @@ final class StudentController extends AbstractController
         ]);
     }
 
+    #[Route('/student/status/{statusid}', name: 'student.indexstatus', methods: ['GET', 'HEAD'])]
+    public function indexstatus(string $statusid): Response
+    {
+	$students = $this->studentRepository->findByStatusId($statusid);
+// we keep the same view because it contains hyperlinks on particular entries
+	return $this->render('student/indexall.html.twig', [
+		'students' => $students,
+	]);
+    }
+
     #[Route('/student/{id}', name: 'student.show', methods: ['GET','HEAD'])]
     public function show(int $id, StatusRepository $statusRepository): Response
     {

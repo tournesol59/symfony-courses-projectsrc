@@ -10,6 +10,13 @@ student.indexall:
     controller: App\Controller\StudentController::indexall
     methods: GET|HEAD
 
+student.indexstatus:
+    path: /student/status/{statusid}
+    #      path: /student/status/{statusname}
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::indexstatus
+    methods: GET|HEAD
+
 student.show:
     path: /student/{id}
     # the controller value has the format 'controller_class::method_name'
@@ -33,6 +40,7 @@ student.check:
     # the controller value has the format 'controller_class::method_name'
     controller: App\Controller\StudentController::check
     methods: GET|POST
+      
 #admin.student.delete:
 #    path: /student/{id}/delete
 #    controller: App\Controller\StudentController::remove
