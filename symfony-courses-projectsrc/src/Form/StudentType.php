@@ -73,6 +73,7 @@ class StudentType extends AbstractType
 		    ],
 		    'allow_add' => 'true',
 	     ])
+		 // 
 	    /* // dont work for ManyToMany: need a CollectionType:
 	    ->add('courses', ChoiceType::class, [
 		    // 'choices' => $this->courses,

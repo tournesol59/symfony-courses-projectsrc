@@ -40,6 +40,16 @@ class StatusRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+        public function findAll(): array
+        {
+	    return $this->createQueryBuilder('s')
+                ->orderBy('s.id', 'ASC')
+                ->setMaxResults(10)
+                ->getQuery()
+                ->getResult()
+            ;
+	    }
+
         public function findOneById($value): ?Status
         {
             return $this->createQueryBuilder('s')
@@ -57,5 +67,5 @@ class StatusRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getOneOrNullResult()
             ;
-        }
+	}
 }

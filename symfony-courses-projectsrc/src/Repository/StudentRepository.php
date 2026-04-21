@@ -81,6 +81,20 @@ class StudentRepository extends ServiceEntityRepository
 	     ->setParameter('searchStatus', '%'.$statusid.'%')
 	     ->addOrderBy('student.lastname', 'ASC')
              ->getQuery()
-             ->getResult();
+	     ->getResult();
     }
+
+    
+//    public function findByStatusDate(): ?array
+
+	    // version pure SQL
+	    // $entityManager = $this->getEntityManager();
+	    // $query = $entityManager('SELECT id, lastname
+	    // 	FROM '\App\Entity\status\ status ON student.statusid = status.id
+	    // 	WHERE status.created_at = :searchDate');
+	    // 	-setParameter('searchDate', '%2018-01-01%')
+	    // 	->addOrderBy('student.lastname, 'ASC')
+	    // 	->getQuery()
+	    // 	->getResult();
+//	}
 }

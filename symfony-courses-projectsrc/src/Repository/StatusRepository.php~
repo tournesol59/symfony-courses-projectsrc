@@ -40,7 +40,15 @@ class StatusRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-
+        public function findOneById($value): ?Status
+        {
+            return $this->createQueryBuilder('s')
+                ->andWhere('s.id = :val')
+                ->setParameter('val', $value)
+                ->getQuery()
+                ->getOneOrNullResult()
+            ;
+        }
         public function findOneByName($value): ?Status
         {
             return $this->createQueryBuilder('s')

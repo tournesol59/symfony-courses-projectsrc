@@ -108,7 +108,7 @@ final class StudentController extends AbstractController
 		   $address2 = new Address($address1->getCity());
 		   // refresh
 		   $student->removeAddress($address1);
-		   $address2 = $addressRepository($address1->getCity());
+		   $address2 = $addressRepository->findOneByCity($address1->getCity());
 		   $student->addAddress($course2);
 		}
  */
@@ -126,12 +126,36 @@ final class StudentController extends AbstractController
     }
 
 
-
-    
-    #[Route('/student/{id}/edit', name: 'student.edit', methods: ['GET', 'POST'])]
+   #[Route('/student/{id}/edit', name: 'student.edit', methods: ['GET', 'POST'])]
     public function edit(int $id, StatusRepository $statusRepository, CourseRepository $courseRepository, AddressRepository $addressRepository, Request $request, EntityManagerInterface $em): Response
     {
-	  
+		$student = $this->studentRepository->findOneById($id);
+		//dd($student);
+		if (empty($student->getAddress()->first())) {
+	   		//dd($student);
+	   		$address1 = $addressRepository->findOneByCity('Pin Balma');
+	   		$student->addAddress($address1);
+		} else {
+            $address1 = $student->getAddress()->first();
+		}
+	    $form = $this->createForm(StudentAddressSelectType::class, $student);
+        $form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()) {
+            //    dd($student); //debug
+			$em->persist($student);
+			$em->flush();
+			return $this->redirectToRoute('student.indexall');
+		}	
+	return $this->render('student/editaddr.html.twig', [
+	    'form' => $form,
+            'student' => $student,
+        ]);
+
+    }
+
+    #[Route('/student/{id}/editaddr', name: 'student.editaddr', methods: ['GET', 'POST'])]
+    public function editaddr(int $id, StatusRepository $statusRepository, CourseRepository $courseRepository, AddressRepository $addressRepository, Request $request, EntityManagerInterface $em): Response
+    { 
 	$student = $this->studentRepository->findOneById($id);
 	//dd($student);
 	if (empty($student->getAddress()->first())) {
@@ -143,11 +167,23 @@ final class StudentController extends AbstractController
         $form->handleRequest($request);	
 	if ($form->isSubmitted() && $form->isValid()) {
             //    dd($student); //debug
+		$address1 = $student->getAddress()->first();
+		if (!empty($student->getAddress()->get(2))) {
+			$address2 = $student->getAddress()->get(2);
+			$sampAddress2 = $addressRepository->findOneByCity($address2->getCity());
+			if (!($sampAddress2 == null)) {
+				$student->removeAddress($address2);
+				//$address2 = new Address($address2->getCity(), $address2->getZipcode());
+				//$em->persist($address2);
+				$student->addAddress($sampAddress2);
+			} else {
+				//TBC
+			}
+		}
 		$em->persist($student);
 		$em->flush();
 		return $this->redirectToRoute('student.indexall');
 	}
-
 	return $this->render('student/edit.html.twig', [
 	    'form' => $form,
             'student' => $student,
@@ -157,7 +193,6 @@ final class StudentController extends AbstractController
 
     // the only difference with the edit and create methods is that check performs a validation after insert (flush) on database and display a message
     #[Route('/student/{id}/check', name: 'student.check', methods: ['GET', 'POST'])]
-
     public function check(int $id, StatusRepository $statusRepository, CourseRepository $courseRepository, AddressRepository $addressRepository, Request $request, EntityManagerInterface $em): Response
     {
 	$student = $this->studentRepository->findOneById($id);

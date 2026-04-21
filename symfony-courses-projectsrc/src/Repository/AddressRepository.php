@@ -50,7 +50,16 @@ class AddressRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult()
             ;
-	}
+	    }
+
+        public function findFirstThreeOnes(): array
+        {
+            return $this->createQueryBuilder('a')
+                ->orderBy('a.id', 'ASC')
+                ->setMaxResults(3)
+                ->getQuery()
+                ->getResult();
+        }
 
         public function findOneById($value): ?Address
         {
@@ -66,6 +75,16 @@ class AddressRepository extends ServiceEntityRepository
         {
             return $this->createQueryBuilder('a')
                 ->andWhere('a.zipcode = :val')
+                ->setParameter('val', $value)
+                ->getQuery()
+                ->getOneOrNullResult()
+            ;
+        }
+
+        public function findOneByCity($value): ?Address
+        {
+            return $this->createQueryBuilder('a')
+                ->andWhere('a.city = :val')
                 ->setParameter('val', $value)
                 ->getQuery()
                 ->getOneOrNullResult()
