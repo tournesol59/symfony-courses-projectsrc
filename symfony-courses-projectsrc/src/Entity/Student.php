@@ -26,6 +26,18 @@ class Student
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $status = null;
 
+/***  fred: added another field manually ***
+ *     #[ORM\ManyToOne(inversedBy: 'students', cascade: ['persist'])]
+ *     #[ORM\JoinColumn(nullable: false)]
+       private ?CourseBlockEnt $courseBlockRNCP = null;
+
+       instead of this: manually added field
+       #[ORM\Column(length: 255)]
+       private ?string $courseBlockRNCP = null;
+ */
+       #[ORM\Column(length: 255)]
+       private ?string $courseBlockRNCP = null;   
+
     /**
      * @var Collection<int, Course>
      */
@@ -93,6 +105,20 @@ class Student
         return $this;
     }
 	    
+    /*** fred getter setters of the temporarily added new field: courseBlockRNCP ***/
+    public function getCourseBlockRNCP(): ?string
+    {
+        return $this->courseBlockRNCP;
+    }
+
+    public function setCourseBlockRNCP(?string $courseBlockRNCP): static
+    {
+        $this->courseBlockRNCP = $courseBlockRNCP;
+
+        return $this;
+    }
+
+
 ///**
 // * @return Collection<int, Comment>
 // */

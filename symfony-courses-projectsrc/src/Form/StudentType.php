@@ -37,7 +37,7 @@ class StudentType extends AbstractType
 	//dd(new Course('NSY104')); //debug
         $builder
             ->add('lastname')
-	    ->add('email')
+	    	->add('email')
             ->add('status', ChoiceType::class, [
 		    'choices' => [ 
 			    new Status('general-student'),

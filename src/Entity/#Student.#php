@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Entity;
+
+use App\Config\Studstat;
+use App\Repository\StudentRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: StudentRepository::class)]
+class Student
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $lastname = null;
+	
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $email = null;	
+	
+    #[ORM\ManyToOne(inversedBy: 'students')]
+    private ?Abonne $abonne = null;
+	
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $lastAbonne = null; // fred: seul le code (ou name) de "last Abonne" est important
+    
+    #[ORM\Column(length: 4)]
+    private ?Studstat $status = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastName(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }	
+	
+    public function getAbonne(): ?Abonne
+    {
+       return $this->abonne;
+    }
+
+   public function setAbonne(?Abonne $abonne): static
+   {
+       $this->abonne = $abonne;
+
+       return $this;
+   }    
+
+    public function getStatus(): ?string
+    {
+	switch($this->status) {
+	case 'General':
+		return 'General student';
+	case 'Apprentice':
+		return 'Teacher apprentice';
+	case 'Master':
+		return 'Thesis student';
+	}
+    }
+
+    public function setStatus(Studstat $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }	
+	
+    	
+    public function getLastAbonne(): ?string
+    {
+       return $this->lastAbonne;
+    }
+
+   public function setLastAbonne(?string $lastAbonne): static
+   {
+       $this->lastAbonne = $lastAbonne;
+
+       return $this;
+   }    
+
+}

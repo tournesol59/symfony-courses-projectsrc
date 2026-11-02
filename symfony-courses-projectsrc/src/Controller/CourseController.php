@@ -19,6 +19,7 @@ final class CourseController extends AbstractController
 
     public function __construct( CourseRepository $courseRepository) {
       $this->courseRepository = $courseRepository;
+
     }
 
     #[Route('/course', name: 'course.indexall', methods: ['GET', 'HEAD'])]
@@ -38,6 +39,18 @@ final class CourseController extends AbstractController
 
         return $this->render('course/show.html.twig', [
             'course' => $course,
+        ]);
+    }
+
+    #[Route('/course/{id}/list', name: 'course.showstud', methods: ['GET', 'HEAD'])]
+    public function showstud(int $id): Response
+    {
+	    $course = $this->courseRepository->findOneById($id);
+        // fred: the line below can be unuseful because the course entity has a method getStudents() that returns the list of students
+        $students = $course->getStudents();
+        return $this->render('course/showstud.html.twig', [
+            'course' => $course,
+            'students' => $students,
         ]);
     }
 

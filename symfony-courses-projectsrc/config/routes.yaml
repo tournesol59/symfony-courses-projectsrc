@@ -23,6 +23,12 @@ student.show:
     controller: App\Controller\StudentController::show
     methods: GET|POST
 
+student.showcblock:
+    path: /student/{id}/cblock
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::showcblock
+    methods: GET|POST
+
 student.create:
     path: /student/student/create
     # the controller value has the format 'controller_class::method_name'
@@ -33,6 +39,12 @@ student.edit:
     path: /student/{id}/edit
     # the controller value has the format 'controller_class::method_name'
     controller: App\Controller\StudentController::edit
+    methods: GET|POST
+
+student.editaddr:
+    path: /student/{id}/editaddr
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentAddressController::editaddr
     methods: GET|POST
 
 student.check:

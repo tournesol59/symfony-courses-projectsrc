@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block title "Inscrire un etudiant" %}
+
+{% block body %}
+
+  <h1> Enregistrer les identifiants d un nouvel etudiant </h1>
+    {{ form_start(form) }}
+     {{ form_row(form.lastname) }}
+     {{ form_row(form.email) }}
+	 <div class="abonnement">
+     {{ form_row(form.abonne.name) }}
+     </div>
+	 {{ form_end(form) }}
+{% endblock %}

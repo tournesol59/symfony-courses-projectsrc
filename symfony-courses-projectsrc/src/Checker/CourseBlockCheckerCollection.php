@@ -33,12 +33,12 @@ final class CourseBlockCheckerCollection extends CourseBlockChecker { // may be 
        $course_mendate = $courseBlock->first();
        while ($course_mendate != null) {
            foreach ($courses as $course) {
-		if ($course->getCodeNAF() === $course_mendate->codeNAF()) {
-	           $this->message = "course selection is valid";
-                   return true;
-	       }
-	   }
-	   $course_mendate = $courseBlock->next();
+		        if ($course->getCodeNAF() === $course_mendate->codeNAF()) {
+	                $this->message = "course selection is valid";
+                    return true;
+	            }
+	        }
+	        $course_mendate = $courseBlock->next();
        }
        // then return an arra like: NO
        // $check_res = ['IMO' => $validIMO, 'ISI' => $validISI];

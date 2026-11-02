@@ -39,9 +39,19 @@ class Course
     #[ORM\ManyToMany(inversedBy: 'courses')]
     private Collection $students;
  */
+/*
     public function __construct(string $codeNAF)
     {
  //      $this->students = new ArrayCollection();
+         $this->setCodeNAF($codeNAF);
+    }
+*/
+    public function __construct(string $title, int $hour, int $day, string $codeNAF)
+    {
+ //      $this->students = new ArrayCollection();
+         $this->setTitle($title);
+         $this->setHour($hour);
+         $this->setDay($day);
          $this->setCodeNAF($codeNAF);
     }
 

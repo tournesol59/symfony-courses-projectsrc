@@ -64,29 +64,40 @@ final class StudentController extends AbstractController
         ]);
     }
 
+    #[Route('/student/{id}/cblock', name: 'student.showcblock', methods: ['GET', 'POST'])]
+	public function showcblock(int $id, CourseRepository $courseRepository): Response
+	{
+		$student = $this->studentRepository->findOneById($id);
+		$courses = $courseRepository->findAllItemsByCodeRNCP($student->getCourseBlockRNCP());
+		return $this->render('student/showcblock.html.twig', [
+		'student' => $student, 
+		'courses' => $courses,
+		]);
+	}
+
     #[Route('/student/student/create', name: 'student.create', methods: ['GET', 'POST'])]
     public function create(StatusRepository $statusRepository, CourseRepository $courseRepository, AddressRepository $addressRepository, Request $request, EntityManagerInterface $em): Response
     {
 	  
-	$student = new Student();
-//	$status = $statusRepository->findOneById(1);
-//	$student->setStatus($status);
-//	
-//	$course1 = $courseRepository->findOneByCodeNAF('NSY102');
-//	$student->addCourse($course1);
+		$student = new Student();
+	//	$status = $statusRepository->findOneById(1);
+	//	$student->setStatus($status);
+	//	
+	//	$course1 = $courseRepository->findOneByCodeNAF('NSY102');
+	//	$student->addCourse($course1);
 
-	$address1 = $addressRepository->findOneByCity('Fenouillet');
-	$student->addAddress($address1);
-	$address2 = $addressRepository->findOneByCity('Quint Fonsegrives');
-	$student->addAddress($address2);
+		$address1 = $addressRepository->findOneByCity('Fenouillet');
+		$student->addAddress($address1);
+		$address2 = $addressRepository->findOneByCity('Quint Fonsegrives');
+		$student->addAddress($address2);
 	// dd($address1); // debug
 
-	$course2 = $courseRepository->findOneByCodeNAF('SEC102');
-	$student->addCourse($course2);
+		$course2 = $courseRepository->findOneByCodeNAF('SEC102');
+		$student->addCourse($course2);
 
         $form = $this->createForm(StudentType::class, $student);
         $form->handleRequest($request);	
-	if ($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
 		
 		// fred TODO: refresh the $course in foreach $courses : $course, from QueryCodeNAF(..)
 		/*
@@ -94,8 +105,9 @@ final class StudentController extends AbstractController
 		
 		$result = $courses->first();
 		if ($result != null) {
-		  $course1 = new Course($result->getCodeNAF());
-		  // refresh
+
+		  $course1 = new Course(); // attention le constructeur a change
+		  $course1->setCodeNAF($result->getCodeNAF());		  // refresh
 		  $student->removeCourse($course1);
 		  $course1 = $courseRepository->findOneByCodeNAF($course1->getCodeNAF());
 		  $student->addCourse($course1);
@@ -109,18 +121,18 @@ final class StudentController extends AbstractController
 		   // refresh
 		   $student->removeAddress($address1);
 		   $address2 = $addressRepository->findOneByCity($address1->getCity());
-		   $student->addAddress($course2);
+		   $student->addAddress($address2);
 		}
  */
 		
-               // dd($student); //debug
-		$em->persist($student);
-		$em->flush();
-		return $this->redirectToRoute('student.indexall');
-	}
+            // dd($student); //debug
+			$em->persist($student);
+			$em->flush();
+			return $this->redirectToRoute('student.indexall');
+		}
 
-	return $this->render('student/create.html.twig', [
-	    'form' => $form,
+		return $this->render('student/create.html.twig', [
+	    	'form' => $form,
             'student' => $student,
         ]);
     }
@@ -147,44 +159,6 @@ final class StudentController extends AbstractController
 			return $this->redirectToRoute('student.indexall');
 		}	
 	return $this->render('student/editaddr.html.twig', [
-	    'form' => $form,
-            'student' => $student,
-        ]);
-
-    }
-
-    #[Route('/student/{id}/editaddr', name: 'student.editaddr', methods: ['GET', 'POST'])]
-    public function editaddr(int $id, StatusRepository $statusRepository, CourseRepository $courseRepository, AddressRepository $addressRepository, Request $request, EntityManagerInterface $em): Response
-    { 
-	$student = $this->studentRepository->findOneById($id);
-	//dd($student);
-	if (empty($student->getAddress()->first())) {
-	   //dd($student);
-	   $address1 = $addressRepository->findOneByCity('Pin Balma');
-	   $student->addAddress($address1);
-	}
-        $form = $this->createForm(StudentType::class, $student);
-        $form->handleRequest($request);	
-	if ($form->isSubmitted() && $form->isValid()) {
-            //    dd($student); //debug
-		$address1 = $student->getAddress()->first();
-		if (!empty($student->getAddress()->get(2))) {
-			$address2 = $student->getAddress()->get(2);
-			$sampAddress2 = $addressRepository->findOneByCity($address2->getCity());
-			if (!($sampAddress2 == null)) {
-				$student->removeAddress($address2);
-				//$address2 = new Address($address2->getCity(), $address2->getZipcode());
-				//$em->persist($address2);
-				$student->addAddress($sampAddress2);
-			} else {
-				//TBC
-			}
-		}
-		$em->persist($student);
-		$em->flush();
-		return $this->redirectToRoute('student.indexall');
-	}
-	return $this->render('student/edit.html.twig', [
 	    'form' => $form,
             'student' => $student,
         ]);

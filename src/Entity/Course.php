@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Entity;
+
+use App\Entity\Student;
+use App\Repository\CourseRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Validator\CourseCodeNAFValidator as CodeNAFAssert;
+
+#[ORM\Entity(repositoryClass: CourseRepository::class)]
+class Course
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column]
+    private ?int $hour = null;
+
+    #[ORM\Column]
+    private ?int $day = null;
+
+    #[ORM\Column(length: 255)]
+    #[CodeNAFAssert\CourseCodeNAFValidator]
+    private ?string $codeNAF = null;
+
+    /**
+     * @var Collection<int, Student>
+     */
+    #[ORM\ManyToMany(targetEntity: Student::class, mappedBy: 'courses')]
+    private Collection $students;
+/*
+    #[ORM\ManyToMany(inversedBy: 'courses')]
+    private Collection $students;
+ */
+/*
+    public function __construct(string $codeNAF)
+    {
+ //      $this->students = new ArrayCollection();
+         $this->setCodeNAF($codeNAF);
+    }
+*/
+    public function __construct(string $title, int $hour, int $day, string $codeNAF)
+    {
+ //      $this->students = new ArrayCollection();
+         $this->setTitle($title);
+         $this->setHour($hour);
+         $this->setDay($day);
+         $this->setCodeNAF($codeNAF);
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getHour(): ?int
+    {
+        return $this->hour;
+    }
+
+    public function setHour(int $hour): static
+    {
+        $this->hour = $hour;
+
+        return $this;
+    }
+
+    public function getDay(): ?int
+    {
+        return $this->day;
+    }
+
+    public function setDay(int $day): static
+    {
+        $this->day = $day;
+
+        return $this;
+    }
+
+    public function getCodeNAF(): ?string
+    {
+        return $this->codeNAF;
+    }
+
+    public function setCodeNAF(string $codeNAF): static
+    {
+        $this->codeNAF = $codeNAF;
+
+        return $this;
+    }
+
+ ///**
+ //* @return Collection<int, Student>
+    //*/
+    /*
+public function getStudents(): Collection
+{
+    return $this->students;
+}
+
+public function addStudent(Student $student): static
+{
+    if (!$this->students->contains($student)) {
+        $this->students->add($student);
+        $student->setCourse($this);
+    }
+
+    return $this;
+}
+
+public function removeStudent(Student $student): static
+{
+    if ($this->students->removeElement($student)) {
+        // set the owning side to null (unless already changed)
+        if ($student->getCourse() === $this) {
+            $student->setCourse(null);
+        }
+    }
+
+    return $this;
+}
+  */
+
+    /**
+     * @return Collection<int, Student>
+     */
+    public function getStudents(): Collection
+    {
+        return $this->students;
+    }
+
+    public function addStudent(Student $student): static
+    {
+        if (!$this->students->contains($student)) {
+            $this->students->add($student);
+            $student->addCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): static
+    {
+        if ($this->students->removeElement($student)) {
+            $student->removeCourse($this);
+        }
+
+        return $this;
+    }
+}

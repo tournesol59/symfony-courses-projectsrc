@@ -8,15 +8,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<Course>
  */
 class CourseRepository extends ServiceEntityRepository
 {
+    private EntityManagerInterface $entityManager;
+    
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Course::class);
+        $this->entityManager = $this->getEntityManager();
     }
 
     //    /**
@@ -84,7 +88,7 @@ class CourseRepository extends ServiceEntityRepository
             ;
 	}
 
-	public function findItemsLetterNAF(): array
+	public function findItemsLetterNAF($prefix): array
 	{
 	   $items = [];   
 	   $allCourses = $this->createQueryBuilder('c')
@@ -95,12 +99,26 @@ class CourseRepository extends ServiceEntityRepository
             ;
 	   foreach ($allCourses as $course) {
 		   //if (preg_match('/^'.$value.'([0-9])([0-9])([0-9])$/', $course->getCodeNAF(), $matches)) {
-	      if (preg_match('/^(NSY)([0-9])([0-9])([0-9])$/', $course->getCodeNAF(), $matches)) {  // fred: begin coded hard
+//	      if (preg_match('/^(NSY)([0-9])([0-9])([0-9])$/', $course->getCodeNAF(), $matches)) {  // fred: begin coded hard
+	      if (preg_match('/^('.$prefix.')([0-9])([0-9])([0-9])$/', $course->getCodeNAF(), $matches)) {  // fred: begin coded hard
 
 	         array_push($items, $course);
 	      } 
 	   }
 	   return $items;
 	}
+
+    public function findAllItemsByCodeRNCP(string $codeRNCP): array
+    {
+        $entityManager = $this->entityManager;
+        $query = $entityManager->createQuery('SELECT c,b
+            FROM App\Entity\Course c,
+            \App\Entity\CourseBlock b
+            LEFT JOIN c.codeNAF = b.codeNAF
+            WHERE b.codeRNCP = :codeRNCP')
+            ->setParameter('codeRNCP', $codeRNCP);
+            
+        return $query->getResult();
+    }
 
 }

@@ -1,0 +1,97 @@
+#controllers:
+#    resource: ../src/Controller/
+#        path: ../src/Controller
+#        namespace: App\Controller
+#    type: attribute
+
+student.indexall:
+    path: /student
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::indexall
+    methods: GET|HEAD
+
+student.indexstatus:
+    path: /student/status/{statusid}
+    #      path: /student/status/{statusname}
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::indexstatus
+    methods: GET|HEAD
+
+student.show:
+    path: /student/{id}
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::show
+    methods: GET|POST
+
+student.showcblock:
+    path: /student/{id}/cblock
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::showcblock
+    methods: GET|POST
+
+student.create:
+    path: /student/student/create
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::create
+    methods: GET|POST
+
+student.edit:
+    path: /student/{id}/edit
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::edit
+    methods: GET|POST
+
+student.editaddr:
+    path: /student/{id}/editaddr
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentAddressController::editaddr
+    methods: GET|POST
+
+student.check:
+    path: /student/{id}/check
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\StudentController::check
+    methods: GET|POST
+      
+#admin.student.delete:
+#    path: /student/{id}/delete
+#    controller: App\Controller\StudentController::remove
+#    method: DELETE
+
+course.indexall:
+    path: /course
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\CourseController::indexall
+    methods: GET|HEAD
+
+course.show:
+    path: /course/{id}
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\CourseController::show
+    methods: GET|HEAD
+
+course.create:
+    path: /course/course/create
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\CourseController::create
+    methods: GET|POST   
+
+course.edit:
+    path: /course/{id}/edit
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\CourseController::edit
+    methods: GET|POST    
+
+# address
+address.indexall:
+    path: /address
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\AddressController::indexall
+    methods: GET|HEAD
+
+address.show:
+    path: /address/{id}
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\AddressController::show
+    methods: GET|HEAD
+
